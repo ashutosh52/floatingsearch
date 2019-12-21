@@ -15,7 +15,7 @@ import com.android.floatingsearch.data.SearchData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FloatingSearchAdapter extends BaseAdapter implements Filterable {
+public class FloatingSearchAdapter extends BaseAdapter {
 
     private List<SearchData> mSearchDataList;
     private List<SearchData> mSearchResultList;
@@ -62,32 +62,23 @@ public class FloatingSearchAdapter extends BaseAdapter implements Filterable {
         return view;
     }
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                FilterResults filterResults = new FilterResults();
-                ArrayList<SearchData> searchDataArrayList = new ArrayList<>();
-                String searchString = charSequence.toString().toLowerCase();
-                for (SearchData searchData : mSearchDataList) {
-                    String title = searchData.getTitle().toLowerCase();
-                    String subTitle = searchData.getSubTitle().toLowerCase();
-                    String description = searchData.getDescription().toLowerCase();
-                    if (title.contains(searchString) || subTitle.contains(searchString) || description.contains(searchString)) {
-                        searchDataArrayList.add(searchData);
-                    }
+    public void updateSearchText(String searchString) {
+        List<SearchData> resultList = new ArrayList<>();
+        if (!searchString.isEmpty()) {
+            String searchStringLowerCased = searchString.toLowerCase();
+            for (SearchData searchData : mSearchDataList) {
+                String title = searchData.getTitle().toLowerCase();
+                String subTitle = searchData.getSubTitle().toLowerCase();
+                String description = searchData.getDescription().toLowerCase();
+                if (title.contains(searchStringLowerCased)
+                        || subTitle.contains(searchStringLowerCased)
+                        || description.contains(searchStringLowerCased)) {
+                    resultList.add(searchData);
                 }
-                filterResults.values = searchDataArrayList;
-                mSearchResultList = searchDataArrayList;
-                return filterResults;
             }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                notifyDataSetChanged();
-            }
-        };
+        }
+        mSearchResultList = resultList;
+        notifyDataSetChanged();
     }
 
     private class ViewHolder {

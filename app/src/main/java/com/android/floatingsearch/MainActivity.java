@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.android.floatingsearch.data.SearchData;
@@ -29,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSubTitle("")
                 .setDescription("").build();
         searchDataList.add(searchData1);
-        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.auto_complete_search);
-        FloatingSearchAdapter adapter = new FloatingSearchAdapter(this, searchDataList);
-        autoCompleteTextView.setAdapter(adapter);
+        FloatingSearchView floatingSearchView = findViewById(R.id.floating_search_view);
+        floatingSearchView.setDataSource(searchDataList);
     }
 }
