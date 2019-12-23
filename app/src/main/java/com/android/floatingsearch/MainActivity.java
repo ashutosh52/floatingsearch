@@ -36,22 +36,6 @@ public class MainActivity extends AppCompatActivity {
         floatingSearchView.setDataSource(searchDataList);
         floatingSearchView.requestSearchFocus();
 
-        floatingSearchView.setLeftIconDrawable(R.drawable.ic_menu);
-        floatingSearchView.setOnLeftIconClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "left button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        floatingSearchView.setRightIconDrawable(R.drawable.ic_menu);
-        floatingSearchView.setOnRightIconClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "right button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         floatingSearchView.setOnItemSelectedListener(new FloatingSearchView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(int position, SearchData searchData) {

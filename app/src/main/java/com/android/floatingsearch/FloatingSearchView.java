@@ -2,6 +2,7 @@ package com.android.floatingsearch;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -25,10 +26,9 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class FloatingSearchView extends LinearLayout {
 
-    private EditText mSearchEditText;
+    private SearchEditText mSearchEditText;
     private ListView mSearchResultListView;
     private ImageButton mLeftIconButton;
-    private ImageButton mRightIconButton;
 
     private FloatingSearchAdapter searchAdapter;
 
@@ -46,16 +46,10 @@ public class FloatingSearchView extends LinearLayout {
         try {
             boolean displayLeftIcon = attributes.getBoolean(R.styleable.FloatingSearchView_displayLeftIcon,
                     false);
-            boolean displayRightIcon = attributes.getBoolean(R.styleable.FloatingSearchView_displayRightIcon,
-                    false);
             setDisplayLeftIcon(displayLeftIcon);
-            setDisplayRightIcon(displayRightIcon);
 
             int leftIconSrc = attributes.getResourceId(R.styleable.FloatingSearchView_leftIconSrc, 0);
             setLeftIconDrawable(leftIconSrc);
-
-            int rightIconSrc = attributes.getResourceId(R.styleable.FloatingSearchView_rightIconSrc, 0);
-            setRightIconDrawable(rightIconSrc);
 
             String searchHint = attributes.getString(R.styleable.FloatingSearchView_searchHint);
             if (searchHint != null) {
@@ -89,9 +83,20 @@ public class FloatingSearchView extends LinearLayout {
 
             }
         });
+
+        Drawable drawableRight = getContext().getResources().getDrawable(R.drawable.ic_close);
+        drawableRight.setBounds(0, 0, drawableRight.getIntrinsicWidth(), drawableRight.getIntrinsicHeight());
+        mSearchEditText.setCompoundDrawables(null, null, drawableRight, null);
+        mSearchEditText.setDrawableClickListener(new SearchEditText.DrawableClickListener() {
+            @Override
+            public void onClick(DrawablePosition target) {
+                if (target == DrawablePosition.RIGHT) {
+                    clearSearch();
+                }
+            }
+        });
         mSearchResultListView = findViewById(R.id.list_search_result);
         mLeftIconButton = findViewById(R.id.image_button_left);
-        mRightIconButton = findViewById(R.id.image_button_right);
     }
 
     private void hideKeyboard() {
@@ -117,16 +122,6 @@ public class FloatingSearchView extends LinearLayout {
         }
     }
 
-    public void setRightIconDrawable(int rscId) {
-        mRightIconButton.setImageResource(rscId);
-        if (rscId != 0) {
-            setDisplayRightIcon(true);
-        }
-        else {
-            setDisplayRightIcon(false);
-        }
-    }
-
     public void setDisplayLeftIcon(boolean shouldDisplayLeftIcon) {
         if (shouldDisplayLeftIcon) {
             mLeftIconButton.setVisibility(View.VISIBLE);
@@ -138,23 +133,12 @@ public class FloatingSearchView extends LinearLayout {
         requestLayout();
     }
 
-    public void setDisplayRightIcon(boolean shouldDisplayRightIcon) {
-        if (shouldDisplayRightIcon) {
-            mRightIconButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            mRightIconButton.setVisibility(View.GONE);
-        }
-        invalidate();
-        requestLayout();
-    }
-
     public void setSearchHint(String hint) {
         mSearchEditText.setHint(hint);
         invalidate();
     }
 
-    /*
+    /**
      * This method should be called to gain focus to search bar.
      * Calling this method will result in opening the soft input keyboard.
      * By default search bar is not focused initially.
@@ -164,7 +148,7 @@ public class FloatingSearchView extends LinearLayout {
         mSearchEditText.requestFocus();
     }
 
-    /*
+    /**
      * This method is used to clear search text from the search bar.
      * Call this method, if you want to clear the search text and don't want to show any search result.
      */
@@ -173,7 +157,7 @@ public class FloatingSearchView extends LinearLayout {
         invalidate();
     }
 
-    /*
+    /**
      * This method will remove the focus and hide the keyboard.
      */
     public void clearSearchFocus() {
@@ -186,10 +170,6 @@ public class FloatingSearchView extends LinearLayout {
 
     public void setOnLeftIconClickListener(View.OnClickListener listener) {
         mLeftIconButton.setOnClickListener(listener);
-    }
-
-    public void setOnRightIconClickListener(View.OnClickListener listener) {
-        mRightIconButton.setOnClickListener(listener);
     }
 
     public void setOnItemSelectedListener(final OnItemSelectedListener listener) {
