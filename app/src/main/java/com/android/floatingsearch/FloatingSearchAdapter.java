@@ -5,8 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,9 +55,28 @@ public class FloatingSearchAdapter extends BaseAdapter {
         }
 
         SearchData searchData = mSearchResultList.get(position);
-        viewHolder.mTitleTextView.setText(searchData.getTitle());
-        viewHolder.mSubtitleTextView.setText(searchData.getSubTitle());
-        viewHolder.mDescriptionTextView.setText(searchData.getDescription());
+
+        // Set row title
+        String title = searchData.getTitle();
+        if (title == null) {
+            title = Consts.EMPTY_STRING;
+        }
+        viewHolder.mTitleTextView.setText(title);
+
+        // Set row subtitle
+        String subTitle = searchData.getSubTitle();
+        if (subTitle == null) {
+            subTitle = Consts.EMPTY_STRING;
+        }
+        viewHolder.mSubtitleTextView.setText(subTitle);
+
+        // Set row description
+        String description = searchData.getDescription();
+        if (description == null) {
+            description = Consts.EMPTY_STRING;
+        }
+        viewHolder.mDescriptionTextView.setText(description);
+
         return view;
     }
 
@@ -67,9 +85,15 @@ public class FloatingSearchAdapter extends BaseAdapter {
         if (!searchString.isEmpty()) {
             String searchStringLowerCased = searchString.toLowerCase();
             for (SearchData searchData : mSearchDataList) {
-                String title = searchData.getTitle().toLowerCase();
-                String subTitle = searchData.getSubTitle().toLowerCase();
-                String description = searchData.getDescription().toLowerCase();
+                String title = searchData.getTitle();
+                title = (title == null) ? Consts.EMPTY_STRING : title.toLowerCase();
+
+                String subTitle = searchData.getSubTitle();
+                subTitle = (subTitle == null) ? Consts.EMPTY_STRING : subTitle.toLowerCase();
+
+                String description = searchData.getDescription();
+                description = (description == null) ? Consts.EMPTY_STRING : description.toLowerCase();
+
                 if (title.contains(searchStringLowerCased)
                         || subTitle.contains(searchStringLowerCased)
                         || description.contains(searchStringLowerCased)) {
@@ -84,7 +108,7 @@ public class FloatingSearchAdapter extends BaseAdapter {
     private class ViewHolder {
         private TextView mTitleTextView, mSubtitleTextView, mDescriptionTextView;
         private ImageView mCellImageView;
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             mTitleTextView = view.findViewById(R.id.text_title);
             mSubtitleTextView = view.findViewById(R.id.text_subtitle);
             mDescriptionTextView = view.findViewById(R.id.text_description);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FloatingSearchView">
+        <attr name="displayLeftIcon" format="boolean"/>
+        <attr name="displayRightIcon" format="boolean"/>
+        <attr name="leftIconSrc" format="integer"/>
+        <attr name="rightIconSrc" format="integer"/>
+        <attr name="searchHint" format="string"/>
+    </declare-styleable>
+</resources>

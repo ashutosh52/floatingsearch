@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FloatingSearch</string>
+    <string name="hint_search">Search&#8230;</string>
 </resources>
