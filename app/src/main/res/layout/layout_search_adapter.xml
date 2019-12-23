@@ -13,8 +13,7 @@
             android:id="@+id/image_cell_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:src="@android:drawable/ic_menu_directions"/>
+            android:layout_margin="5dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

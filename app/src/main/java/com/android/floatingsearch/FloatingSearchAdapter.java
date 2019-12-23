@@ -21,6 +21,8 @@ public class FloatingSearchAdapter extends BaseAdapter {
 
     private LayoutInflater mLayoutInflater;
 
+    private OnSearchResultListener mSearchResultListener;
+
     public FloatingSearchAdapter(Context context, List<SearchData> searchDataList) {
         mSearchDataList = searchDataList;
         mLayoutInflater = LayoutInflater.from(context);
@@ -102,7 +104,14 @@ public class FloatingSearchAdapter extends BaseAdapter {
             }
         }
         mSearchResultList = resultList;
+        if (mSearchResultListener != null) {
+            mSearchResultListener.onSuccess(resultList.size());
+        }
         notifyDataSetChanged();
+    }
+
+    void setSearchResultListener(OnSearchResultListener listener) {
+        mSearchResultListener = listener;
     }
 
     private class ViewHolder {
@@ -114,5 +123,9 @@ public class FloatingSearchAdapter extends BaseAdapter {
             mDescriptionTextView = view.findViewById(R.id.text_description);
             mCellImageView = view.findViewById(R.id.image_cell_icon);
         }
+    }
+
+    interface OnSearchResultListener {
+        void onSuccess(int resultCount);
     }
 }

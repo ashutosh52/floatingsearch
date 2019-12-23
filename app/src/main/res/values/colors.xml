@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="search_view_border_color">#f8f8f8</color>
     <color name="search_view_background_color">#FFFFFF</color>
+    <color name="search_divider_color">#C9C7C7</color>
 </resources>

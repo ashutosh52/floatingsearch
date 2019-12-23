@@ -7,16 +7,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.android.floatingsearch.data.SearchData;
 
@@ -29,8 +26,21 @@ public class FloatingSearchView extends LinearLayout {
     private SearchEditText mSearchEditText;
     private ListView mSearchResultListView;
     private ImageButton mLeftIconButton;
+    private View mSearchDividerView;
 
-    private FloatingSearchAdapter searchAdapter;
+    private FloatingSearchAdapter mSearchAdapter;
+
+    private FloatingSearchAdapter.OnSearchResultListener mSearchListener = new FloatingSearchAdapter.OnSearchResultListener() {
+        @Override
+        public void onSuccess(int resultCount) {
+            if (resultCount != 0) {
+                mSearchDividerView.setVisibility(View.VISIBLE);
+            }
+            else {
+                mSearchDividerView.setVisibility(View.GONE);
+            }
+        }
+    };
 
     public FloatingSearchView(Context context) {
         this(context, null);
@@ -64,6 +74,7 @@ public class FloatingSearchView extends LinearLayout {
     private void loadLayout() {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         layoutInflater.inflate(R.layout.layout_auto_complete_view, this, true);
+        mSearchDividerView = findViewById(R.id.view_search_divider);
         mSearchEditText = findViewById(R.id.auto_complete_search);
         mSearchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -73,8 +84,8 @@ public class FloatingSearchView extends LinearLayout {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (searchAdapter != null) {
-                    searchAdapter.updateSearchText(charSequence.toString());
+                if (mSearchAdapter != null) {
+                    mSearchAdapter.updateSearchText(charSequence.toString());
                 }
             }
 
@@ -107,8 +118,9 @@ public class FloatingSearchView extends LinearLayout {
     }
 
     public void setDataSource(List<SearchData> searchDataList) {
-        searchAdapter = new FloatingSearchAdapter(getContext(), searchDataList);
-        mSearchResultListView.setAdapter(searchAdapter);
+        mSearchAdapter = new FloatingSearchAdapter(getContext(), searchDataList);
+        mSearchAdapter.setSearchResultListener(mSearchListener);
+        mSearchResultListView.setAdapter(mSearchAdapter);
         requestLayout();
     }
 
@@ -176,7 +188,7 @@ public class FloatingSearchView extends LinearLayout {
         mSearchResultListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SearchData searchData = (SearchData) searchAdapter.getItem(i);
+                SearchData searchData = (SearchData) mSearchAdapter.getItem(i);
                 listener.onItemSelected(i, searchData);
             }
         });
