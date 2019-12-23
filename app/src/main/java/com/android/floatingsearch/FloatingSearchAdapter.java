@@ -39,7 +39,7 @@ public class FloatingSearchAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return mSearchResultList.get(i);
     }
 
     @Override
